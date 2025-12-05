@@ -2,7 +2,9 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: pod3
-spec:
+  metadata:
+    labels:
+      custom.sched.io/pod/restrictions: "10" # Max cost + SLA Required
   containers:
   - name: nginx
     image: nginx:1.14.2

@@ -7,5 +7,14 @@ profiles:
     plugins:
       multiPoint:
         enabled:
+          - name: ContextAware
+            weight: 100
           - name: NodeNumber
             weight: 10
+    pluginConfig:
+      - name: ContextAware
+        args:
+          # Estos dos campos son OBLIGATORIOS si tu struct tiene TypeMeta
+          apiVersion: kubescheduler.config.k8s.io/v1
+          kind: ContextAwareArgs
+          labelPrefix: "custom.sched.io/"
