@@ -100,7 +100,6 @@ func (pl *ContextAware) Score(ctx context.Context, state *framework.CycleState, 
 
 	var matchScore int64 = 33 //Static
 
-
 	return matchScore, nil
 }
 
@@ -117,14 +116,12 @@ func New(ctx context.Context, arg runtime.Object, h framework.Handle) (framework
 		if err != nil {
 			return nil, xerrors.Errorf("decode arg into ContextAwareArgs: %w", err)
 		}
-		klog.Info("ContextAwareArgs is successfully applied")
+		klog.Info("ContextAwareArgs is successfully applied: %w", typedArg.LabelPrefix)
 	}
 	return &ContextAware{labelPrefix: typedArg.LabelPrefix}, nil
 }
 
 // ContextAwareArgs is arguments for node number plugin.
-//
-//nolint:revive
 type ContextAwareArgs struct {
 	metav1.TypeMeta
 

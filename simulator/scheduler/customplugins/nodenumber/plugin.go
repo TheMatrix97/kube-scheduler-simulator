@@ -3,6 +3,7 @@ package nodenumber
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"golang.org/x/xerrors"
@@ -10,7 +11,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
-	"k8s.io/kubernetes/pkg/scheduler/framework"
+	framework "k8s.io/kubernetes/pkg/scheduler/framework"
+
+	// 3. Aquí definimos el alias 'frameworkruntime' para usar 'frameworkruntime.DecodeInto'
 	frameworkruntime "k8s.io/kubernetes/pkg/scheduler/framework/runtime"
 )
 
@@ -26,7 +29,17 @@ type NodeNumber struct {
 	//
 	// For example:
 	// When schedule a pod named Pod1, a Node named Node1 gets a lower score than a node named Node9.
+	handle  framework.Handle // Usa el alias 'framework'
 	reverse bool
+}
+
+// NodeNumberArgs is arguments for node number plugin.
+//
+//nolint:revive
+type NodeNumberArgs struct {
+	metav1.TypeMeta `json:",inline"`
+
+	Reverse bool `json:"reverse"`
 }
 
 var (
@@ -128,22 +141,42 @@ func (pl *NodeNumber) ScoreExtensions() framework.ScoreExtensions {
 
 // New initializes a new plugin and returns it.
 func New(ctx context.Context, arg runtime.Object, h framework.Handle) (framework.Plugin, error) {
-	typedArg := NodeNumberArgs{Reverse: false}
-	if arg != nil {
-		err := frameworkruntime.DecodeInto(arg, &typedArg)
-		if err != nil {
-			return nil, xerrors.Errorf("decode arg into NodeNumberArgs: %w", err)
-		}
-		klog.Info("NodeNumberArgs is successfully applied")
+	// 1. Definir valores por defecto (Defaulting)
+	args := &NodeNumberArgs{
+		Reverse: false, // Valor por defecto
 	}
-	return &NodeNumber{reverse: typedArg.Reverse}, nil
+
+	// 2. Decodificar la configuración del YAML en tu struct
+	if err := frameworkruntime.DecodeInto(arg, args); err != nil {
+		return nil, fmt.Errorf("error al decodificar NodeNumberArgs: %w", err)
+	}
+
+	// Logging para verificar que funciona
+	klog.InfoS("NodeNumberArgs aplicados correctamente", "reverse", args.Reverse)
+
+	// 3. Pasar la configuración a tu plugin
+	return &NodeNumber{
+		handle:  h,
+		reverse: args.Reverse,
+	}, nil
 }
 
-// NodeNumberArgs is arguments for node number plugin.
-//
-//nolint:revive
-type NodeNumberArgs struct {
-	metav1.TypeMeta
+// DeepCopyObject es necesario para cumplir la interfaz runtime.Object.
+func (in *NodeNumberArgs) DeepCopyObject() runtime.Object {
+	if in == nil {
+		return nil
+	}
+	out := new(NodeNumberArgs)
+	in.DeepCopyInto(out)
+	return out
+}
 
-	Reverse bool `json:"reverse"`
+// DeepCopyInto copia el receptor al argumento de salida.
+func (in *NodeNumberArgs) DeepCopyInto(out *NodeNumberArgs) {
+	*out = *in
+	out.TypeMeta = in.TypeMeta
+	// Aquí copias tus campos. Si tienes punteros o slices, debes copiarlos uno a uno.
+	// Como 'Reverse' es un booleano simple, la asignación *out = *in ya lo cubrió,
+	// pero es buena práctica ser explícito si la estructura crece.
+	out.Reverse = in.Reverse
 }
