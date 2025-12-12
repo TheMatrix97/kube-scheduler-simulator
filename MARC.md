@@ -21,7 +21,7 @@ kubectl --kubeconfig=simulator/cmd/scheduler/kubeconfig.yaml apply -f poc/pod.ya
 
 ## Create the scheduler plugin
 
-- Add the implementation in `scheduler/customplugins/{your_plugin}/plugin.go`
+- Add the implementation in `simulator/custom/{your_plugin}/plugin.go`
 > Check nodeNumber current implementation
 
 - Modify the scheduler to include your plugin `simulator/cmd/scheduler.go`
