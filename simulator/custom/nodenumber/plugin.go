@@ -3,6 +3,7 @@ package nodenumber
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"golang.org/x/xerrors"
@@ -85,6 +86,7 @@ var ErrNotExpectedPreScoreState = errors.New("unexpected pre score state")
 // Score invoked at the score extension point.
 func (pl *NodeNumber) Score(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeName string) (int64, *framework.Status) {
 	klog.InfoS("execute Score on NodeNumber plugin", "pod", klog.KObj(pod))
+	klog.InfoS("Params -> %w", pl.reverse)
 	data, err := state.Read(preScoreStateKey)
 	if err != nil {
 		// return success even if there is no value in preScoreStateKey, since the
@@ -126,16 +128,29 @@ func (pl *NodeNumber) ScoreExtensions() framework.ScoreExtensions {
 	return nil
 }
 
-// New initializes a new plugin and returns it.
+// New initializes a new plugin and returns it. debugger helper
 func New(ctx context.Context, arg runtime.Object, h framework.Handle) (framework.Plugin, error) {
+	// 1. Debug Raw Input
+	if arg != nil {
+		// Convert the runtime.Object (likely runtime.Unknown) to JSON to see raw bytes
+		if unknown, ok := arg.(*runtime.Unknown); ok {
+			klog.InfoS("Raw Args received", "json", string(unknown.Raw))
+		} else {
+			klog.InfoS("Args received but not runtime.Unknown", "type", fmt.Sprintf("%T", arg))
+		}
+	} else {
+		klog.Info("Args is NIL")
+	}
+
 	typedArg := NodeNumberArgs{Reverse: false}
 	if arg != nil {
 		err := frameworkruntime.DecodeInto(arg, &typedArg)
 		if err != nil {
 			return nil, xerrors.Errorf("decode arg into NodeNumberArgs: %w", err)
 		}
-		klog.Info("NodeNumberArgs is successfully applied")
+		klog.InfoS("NodeNumberArgs successfully applied", "reverse", typedArg.Reverse)
 	}
+
 	return &NodeNumber{reverse: typedArg.Reverse}, nil
 }
 
@@ -144,6 +159,5 @@ func New(ctx context.Context, arg runtime.Object, h framework.Handle) (framework
 //nolint:revive
 type NodeNumberArgs struct {
 	metav1.TypeMeta
-
 	Reverse bool `json:"reverse"`
 }

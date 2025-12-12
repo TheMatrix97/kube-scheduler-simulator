@@ -1,0 +1,13 @@
+kind: Node
+apiVersion: v1
+metadata:
+  name: node3
+status:
+  capacity:
+    cpu: '4'
+    memory: 32Gi
+    pods: '110'
+  allocatable:
+    cpu: '4'
+    memory: 32Gi
+    pods: '110'
