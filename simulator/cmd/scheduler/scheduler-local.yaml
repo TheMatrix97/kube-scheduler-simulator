@@ -10,6 +10,6 @@ profiles:
           - name: NodeNumber
             weight: 20
     pluginConfig:
-      - name: NodeNumber
+      - name: NodeNumberWrapped
         args:
           reverse: True
