@@ -10,8 +10,6 @@ profiles:
           - name: NodeNumber
             weight: 10
     pluginConfig:
-      - name: NodeNumber
+      - name: NodeNumberWrapped
         args:
-          apiVersion: kubescheduler.config.k8s.io/v1
-          kind: NodeNumberArgs
           reverse: true

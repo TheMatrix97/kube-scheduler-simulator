@@ -4,10 +4,10 @@ metadata:
   name: node3
 status:
   capacity:
-    cpu: '4'
+    cpu: 4
     memory: 32Gi
-    pods: '110'
+    pods: 110
   allocatable:
-    cpu: '4'
+    cpu: 4
     memory: 32Gi
-    pods: '110'
+    pods: 110
