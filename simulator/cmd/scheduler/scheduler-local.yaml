@@ -1,0 +1,15 @@
+kind: KubeSchedulerConfiguration
+apiVersion: kubescheduler.config.k8s.io/v1
+clientConnection:
+  kubeconfig: /home/matrix/phd/kube-scheduler-simulator/simulator/cmd/kubeconfig-local.yaml
+profiles:
+  - schedulerName: default-scheduler
+    plugins:
+      multiPoint:
+        enabled:
+          - name: NodeNumber
+            weight: 10
+    pluginConfig:
+      - name: NodeNumberWrapped
+        args:
+          reverse: true

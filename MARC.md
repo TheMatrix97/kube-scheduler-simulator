@@ -1,5 +1,6 @@
 # Notes - Marc
 
+> Tested with go1.24.5
 
 ## Run the PoC demo:
 
@@ -48,6 +49,32 @@ profiles:
             weight: 10
 ```
 
+## Debug
+
+Check `.vscode/launch.json` to run the simulator scheduler in debugmode
+
+1. Stop the containers `simulator-server` and `simulator-scheduler`
+
+2. Use `simulator/cmd/scheduler-local/scheduler-local` to set your scheduler preferences. Don't forget to add the Wrapped suffix to your plugin confings.
+
+Example:
+```yaml
+kind: KubeSchedulerConfiguration
+apiVersion: kubescheduler.config.k8s.io/v1
+clientConnection:
+  kubeconfig: /home/matrix/phd/kube-scheduler-simulator/simulator/cmd/kubeconfig-local.yaml
+profiles:
+  - schedulerName: default-scheduler
+    plugins:
+      multiPoint:
+        enabled:
+          - name: NodeNumber
+            weight: 10
+    pluginConfig:
+      - name: NodeNumberWrapped
+        args:
+          reverse: true
+```
 
 ## Cleanup
 
