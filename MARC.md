@@ -12,12 +12,12 @@ make docker_build docker_up_local
 
 - Deploy the nodes
 ```bash
-kubectl --kubeconfig=simulator/cmd/scheduler/kubeconfig-local.yaml apply -k poc/nodes
+kubectl --kubeconfig=simulator/cmd/scheduler/kubeconfig-local.yaml apply -k poc/default/nodes
 ```
 
 - Deploy the Pod, it should be scheduled to node 3
 ```bash
-kubectl --kubeconfig=simulator/cmd/scheduler/kubeconfig-local.yaml apply -f poc/pod.yaml
+kubectl --kubeconfig=simulator/cmd/scheduler/kubeconfig-local.yaml apply -f poc/default/pod.yaml
 ```
 
 ## Create the scheduler plugin

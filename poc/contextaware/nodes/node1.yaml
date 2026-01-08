@@ -1,0 +1,15 @@
+kind: Node
+apiVersion: v1
+metadata:
+  name: node1
+  annotations:
+    node.kubernetes.io/instance-type: custom-type-1
+status:
+  capacity:
+    cpu: 4
+    memory: 32Gi
+    pods: 110
+  allocatable:
+    cpu: 4
+    memory: 32Gi
+    pods: 110
