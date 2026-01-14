@@ -1,12 +1,12 @@
 kind: Node
 apiVersion: v1
 metadata:
-  name: node1
+  name: node2
   annotations:
     # kontext.io/uptime: custom-type-1 # Obtain from the v1.Node Uptime metric (K8s API)
-    kontext.io/karma: "0.85" # Higher karma indicates better reliability + 
-    kontext.io/cost-by-cpu: "0.12" # Cost per CPU unit (Total Fake)
-    kontext.io/cost-by-memory: "0.08" # Cost per GB of Memory (Total Fake)
+    kontext.io/karma: "0.5" # Higher karma indicates better reliability + 
+    kontext.io/cost-by-cpu: "0.02" # Cost per CPU unit (Total Fake)
+    kontext.io/cost-by-memory: "0.03" # Cost per GB of Memory (Total Fake)
 status:
   capacity:
     cpu: 4

@@ -17,7 +17,6 @@ services:
     depends_on:
       - init-container
       - simulator-cluster
-    restart: always
     tty: true
     networks:
       - simulator-internal-network

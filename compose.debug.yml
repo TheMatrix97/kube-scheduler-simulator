@@ -1,0 +1,8 @@
+services:
+  # Disable conflicting services for debugging custom scheduler plugins
+  simulator-scheduler:
+    profiles:
+      - disabled
+  simulator-server:
+    profiles:
+      - disabled
