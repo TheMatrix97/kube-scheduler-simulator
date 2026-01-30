@@ -9,7 +9,12 @@ profiles:
         enabled:
           - name: NodeNumber
             weight: 10
+          - name: ContextAware
+            weight: 20
     pluginConfig:
       - name: NodeNumberWrapped
         args:
           reverse: false
+      - name: ContextAwareWrapped
+        args:
+          labelPrefix: "kontext.io/"
